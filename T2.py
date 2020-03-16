@@ -2,8 +2,8 @@ import math
 import numpy as np
 
 eps = math.pow(10, -np.loadtxt('precision.txt'))
-A = np.loadtxt('t2_large.txt')
-b = np.loadtxt('t2_b_large.txt')
+A = np.loadtxt('t2.txt')
+b = np.loadtxt('t2_b.txt')
 n = A.shape[0]
 A_init = A.copy()
 L = np.zeros((n, n))
@@ -81,12 +81,11 @@ for i in range(n):
 
 L, U = separate_triangles(A)
 
-print("Matricea U calculata de algoritmul ce se utilizeaza de mai multe matrici:")
-print(U)
-print("Matricea L calculata de algoritmul ce se utilizeaza de mai multe matrici:")
-print(L)
 print("Matricea calculata de algoritmul ce se utilizeaza de o singura matrice:")
 print(A)
+print("Matricile L si U in urma separarii:")
+print(L)
+print(U)
 print("Determinantul lui A calculat obisnuit:")
 print(np.linalg.det(A_init))
 print("Determinantul lui A calculat stiind descompunerea LU:")
@@ -132,6 +131,9 @@ for q in range(n):
         x[i] = y[i] / U[i][i]
     for q2 in range(n):
         A_inv[q2][q] = x[q2]
+
+print("Inversa matricii A:")
+print(A_inv)
 
 print("Calculam norma pentru a verifica solutia sistemului de ecuatii:")
 alg_solution = np.linalg.solve(A_init, b_init)
