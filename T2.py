@@ -21,7 +21,6 @@ def try_divide(a, b):
 
 
 def separate_triangles(A):
-    print("pupa-mi pisatul")
     loo = np.zeros((n,n))
     upp = np.zeros((n,n))
     for s in range(n):
