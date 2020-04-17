@@ -116,6 +116,11 @@ print(A_plus_B)
 print("A + B verificare:")
 print(A_plus_B_verify)
 
+A = rare_matrix(A_arr, A_size)
+B = rare_matrix(B_arr, B_size)
+sums(A, A_size)
+sums(B, B_size)
+
 A_ori_B = rare_product(A, B, A_size)
 A_ori_B_verify = rare_matrix(prod_test, prod_test_size)
 print("A * B:")
