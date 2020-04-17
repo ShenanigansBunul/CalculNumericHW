@@ -2,8 +2,8 @@ import math
 import numpy as np
 
 eps = math.pow(10, -np.loadtxt('precision.txt'))
-A = np.loadtxt('t2.txt')
-b = np.loadtxt('t2_b.txt')
+A = np.loadtxt('t2_large.txt')
+b = np.loadtxt('t2_b_large.txt')
 n = A.shape[0]
 A_init = A.copy()
 L = np.zeros((n, n))

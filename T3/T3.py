@@ -15,7 +15,15 @@ def read_rare(fname):
 A_arr, A_size = read_rare("a.txt")
 B_arr, B_size = read_rare("b.txt")
 sum_test, sum_test_size = read_rare('aplusb.txt')
-prod_text, prod_test_size = read_rare('aorib.txt')
+prod_test, prod_test_size = read_rare('aorib.txt')
+
+
+def empty_rare_matrix(n):
+    result = []
+    for _ in range(n):
+        row = []
+        result.append(row)
+    return result
 
 
 def rare_matrix(data, n):
@@ -34,6 +42,14 @@ def rare_matrix(data, n):
     return result
 
 
+def transpose(m, n):
+    result = empty_rare_matrix(n)
+    for i in range(n):
+        for elem in m[i]:
+            result[elem[1]].append([elem[0], i])
+    return result
+
+
 def rare_sum(m1, m2, n):
     result = m1.copy()
     for i in range(n):
@@ -48,15 +64,50 @@ def rare_sum(m1, m2, n):
     return result
 
 
+def rare_product(m1, m2, n):
+    result = empty_rare_matrix(n)
+    m2_t = transpose(m2, n)
+    for r_i in range(n):
+        for r_j in range(n):
+            s = 0
+            for j in m1[r_i]:
+                for k in m2_t[r_j]:
+                    if j[1] == k[1]:
+                        s += j[0] * k[0]
+                        break
+            if s != 0:
+                result[r_i].append([s, r_j])
+    return result
+
+
+def sums(m, n):
+    for i in range(n):
+        new_el = []
+        for el in m[i]:
+            found = False
+            for k in new_el:
+                if k[1] == el[1]:
+                    found = True
+                    k[0] += el[0]
+                    break
+            if not found:
+                new_el.append(el)
+        m[i] = new_el
+
+
+test_arr, test_size = read_rare("small_test.txt")
+test = rare_matrix(test_arr, test_size)
+test2_arr, test2_size = read_rare("small_test2.txt")
+test2 = rare_matrix(test2_arr, test2_size)
+
 A = rare_matrix(A_arr, A_size)
 B = rare_matrix(B_arr, B_size)
+sums(A, A_size)
+sums(B, B_size)
 A_plus_B = rare_sum(A, B, A_size)
 A_plus_B_verify = rare_matrix(sum_test, sum_test_size)
-print(A)
-print(B)
-print(A_plus_B)
-print(A_plus_B_verify)
+A_ori_B = rare_product(A, B, A_size)
+A_ori_B_verify = rare_matrix(prod_test, prod_test_size)
 
-# cij: parcurs linia unei matrici (ez)
-# pentru elementele nenule de pe pozitii linie m, n, p
-# gasit elemente nenule de pe pozitii coloane m, n, p
+print(sorted(A_ori_B[0], key=lambda x: x[0]))
+print(sorted(A_ori_B_verify[0], key=lambda x: x[0]))
