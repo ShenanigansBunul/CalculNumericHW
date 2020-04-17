@@ -95,19 +95,30 @@ def sums(m, n):
         m[i] = new_el
 
 
+'''
 test_arr, test_size = read_rare("small_test.txt")
 test = rare_matrix(test_arr, test_size)
 test2_arr, test2_size = read_rare("small_test2.txt")
 test2 = rare_matrix(test2_arr, test2_size)
+print(test)
+print(rare_product(test, test2, test2_size))
+'''
 
 A = rare_matrix(A_arr, A_size)
 B = rare_matrix(B_arr, B_size)
 sums(A, A_size)
 sums(B, B_size)
+
 A_plus_B = rare_sum(A, B, A_size)
 A_plus_B_verify = rare_matrix(sum_test, sum_test_size)
+print("A + B:")
+print(A_plus_B)
+print("A + B verificare:")
+print(A_plus_B_verify)
+
 A_ori_B = rare_product(A, B, A_size)
 A_ori_B_verify = rare_matrix(prod_test, prod_test_size)
-
-print(sorted(A_ori_B[0], key=lambda x: x[0]))
-print(sorted(A_ori_B_verify[0], key=lambda x: x[0]))
+print("A * B:")
+print(A_ori_B[0])
+print("A * B verificare:")
+print(A_ori_B_verify[0])
