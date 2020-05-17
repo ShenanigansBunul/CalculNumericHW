@@ -1,4 +1,5 @@
 import numpy as np
+from math import sqrt
 
 
 def read_rare(fname):
@@ -23,8 +24,8 @@ def read_list(fname):
     return list(map(lambda x: float(x), f_arr)), f_size
 
 
-a, a_size = read_rare("a_example.txt")
-b, b_size = read_list("b_example.txt")
+a, a_size = read_rare("a_1.txt")
+b, b_size = read_list("b_1.txt")
 
 
 def empty_rare_matrix(n):
@@ -48,50 +49,53 @@ def rare_matrix(data, n):
                 j[0] += params[0]
         if not found:
             result[int(params[1])].append([params[0], int(params[2])])
-
-    result2 = []
-    for i in range(n):
-        result2.append(dict())
-    for i in range(n):
-        for j in result[i]:
-            result2[i][str(j[1])] = j[0]
-    return result2
+    return result
 
 
 def diag_check(m, n):
     for i in range(n):
-        if str(i) not in m[i]:
-            print(m[i])
+        found = False
+        for j in m[i]:
+            if j[1] == i:
+                if j[0] != 0:
+                    found = True
+        if not found:
             return "Matricea nu are diagonala nenula"
     return "Matricea are diagonala nenula"
 
 
+def get_diag(m, n):
+    d = []
+    for i in range(n):
+        for j in m[i]:
+            if j[1] == i:
+                d.append(j[0])
+    return d
+
+
 def g_sum1(row, x, i):
-    sum1 = 0
-    for j in range(i-1):
-        factor = 0
-        if str(j) in row:
-            factor = row[str(j)]
-        sum1 += factor * x[j]
+    sum1 = 0.0
+    for j in row:
+        if j[1] <= i - 2:
+            sum1 += j[0] * x[j[1]]
     return sum1
 
 
-def g_sum2(row, x, n,  i):
-    sum2 = 0
-    for j in range(i, n):
-        factor = 0
-        if str(j) in row:
-            factor = row[str(j)]
-        sum2 += factor * x[j]
+def g_sum2(row, x, n, i):
+    sum2 = 0.0
+    for j in row:
+        if i < j[1] <= n:
+            sum2 += j[0] * x[j[1]]
     return sum2
 
 
-def gauss_seidel(m, b, n, x):  # sistem m, termeni liberi b, dimensiune n, sir anterior x
-    new_x = zeros(n)
+def gauss_seidel(m, b, n, x, d, delta):  # sistem m, termeni liberi b, dimensiune n, sir anterior x
     for i in range(n):
         row = m[i]
-        new_x[i] = (b[i] - g_sum1(row, new_x, i) - g_sum2(row, x, n, i)) / row[str(i)]
-    return new_x
+        new_x = (b[i] - g_sum1(row, x, i) - g_sum2(row, x, n, i)) / d[i]
+        delta += pow(new_x - x[i], 2)
+        x[i] = new_x
+    return x, delta
 
 
 def initial_x(n):
@@ -111,7 +115,12 @@ def zeros(n):
 a_matrix = rare_matrix(a, a_size)
 print(diag_check(a_matrix, a_size))
 
-x = initial_x(a_size)
-for i in range(25):
-    x = gauss_seidel(a_matrix, b, a_size, x)
-    print(x)
+x = zeros(a_size)
+d = get_diag(a_matrix, a_size)
+for _ in range(100000):
+    delta = 0
+    x, delta = gauss_seidel(a_matrix, b, a_size, x, d, delta)
+    print(x[:10])
+    if not (sqrt(delta) > 1e-32 and sqrt(delta) < 1e32):
+        print("Divergenta")
+        break
